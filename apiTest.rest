@@ -1,0 +1,7 @@
+POST http://localhost:3000/api/weather/all
+Content-Type: application/json
+
+{
+    "lat": 51.5007,
+    "lon": 0.1246
+}
