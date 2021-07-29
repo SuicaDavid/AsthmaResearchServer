@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const shortId = require('shortid')
+const { setUTCTime } = require('../utility/dateUtility')
 
 const weatherSchema = new mongoose.Schema({
     id: {
@@ -18,7 +19,7 @@ const weatherSchema = new mongoose.Schema({
     updatedDate: {
         type: Date,
         require: true,
-        default: Date.now
+        default: setUTCTime
     },
     weather: {
         type: Array,

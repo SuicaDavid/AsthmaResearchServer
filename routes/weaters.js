@@ -1,6 +1,7 @@
 const express = require('express')
 const axios = require('axios')
 const weather = require('../models/weather')
+const {setUTCTime} = require('../utility/dateUtility')
 const router = express.Router()
 
 const WEATHER_API_KEY =  process.env.WEATHER_API_KEY
@@ -10,9 +11,11 @@ const REQUEST_INTERVAL = 15 * MS_PER_MINUTE
 
 
 router.get('/', async (req, res)=>{
+    req.on('error',function(err){console.log(err)})
     let savedWeather = await weather.findOne({id: req.query.cityId}).exec()
     if(savedWeather) {
-        if ((Date.now() - savedWeather.updatedDate) > REQUEST_INTERVAL) {
+        let now = setUTCTime()
+        if ((now - savedWeather.updatedDate) > REQUEST_INTERVAL) {
             console.log("Renew")
             fetchWeatherByCityId(req, res)
                 .then(result=>{
@@ -21,7 +24,7 @@ router.get('/', async (req, res)=>{
                 })
         } else {
             console.log("Cache")
-        res.json(savedWeather)
+            res.json(savedWeather)
         }
     } else {
         console.log("Fetch new weather")

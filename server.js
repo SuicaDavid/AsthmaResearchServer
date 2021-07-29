@@ -8,6 +8,12 @@ const axios = require("axios")
 const Weather = require('./models/weather')
 const weatherRouter = require('./routes/weaters')
 
+// handle socket hang up error
+delete process.env['http_proxy'];
+delete process.env['HTTP_PROXY'];
+delete process.env['https_proxy'];
+delete process.env['HTTPS_PROXY'];
+
 const app = express()
 
 mongoose.connect(process.env.DATABASE_URL, {
