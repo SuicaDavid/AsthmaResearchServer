@@ -6,4 +6,4 @@
 #     "lon": 0.1246
 # }
 
-GET http://localhost:3000/api/weather/?lat=51.5007&lon=0.1246&cityId=7302135
+GET http://localhost:3000/api/weather/?lat=51.5007&lon=0.1246&cityName=Abbey+Wood
