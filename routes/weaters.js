@@ -15,13 +15,17 @@ const instance = axios.create({
     httpsAgent: new https.Agent({keepAlive: true}),
     timeout: 500
 })
+
 router.get('/', async (req, res)=>{
     req.on('error',function(err){console.log(err)})
     let city = cityListJson.find(city=>city.name === req.query.cityName)
     req.city = city
-    let savedWeather = await weather.findOne({id: city.id}).exec()
+    console.log(city, city.name)
+    let savedWeather = await weather.findOne({name: city.name}).exec()
+    console.log(savedWeather)
     if(savedWeather) {
         let now = setUTCTime()
+        console.log(now, savedWeather.updatedDate, now - savedWeather.updatedDate, REQUEST_INTERVAL)
         if ((now - savedWeather.updatedDate) > REQUEST_INTERVAL) {
             console.log("Renew")
             fetchWeatherByCityId(req, res)
@@ -40,6 +44,23 @@ router.get('/', async (req, res)=>{
             weather.create(result)
             res.json(result)
         })
+    }
+})
+
+router.delete('/', async (req, res)=> {
+    let {id} = req.query
+    try {
+        let savedWeather = await weather.findOne({id: id}).exec()
+        if (savedWeather) {
+            savedWeather.delete()
+            res.end("Finish")
+        } else {
+            res.end("Nothing to delete")
+        }
+    } catch(error) {
+        console.log(error)
+        console.error(error)
+        res.status(500).json({message: error.message})
     }
 })
 

@@ -7,3 +7,8 @@
 # }
 
 GET http://localhost:3000/api/weather/?lat=51.5007&lon=0.1246&cityName=Abbey+Wood
+
+
+###
+# DELETE http://localhost:3000/api/weather/?id=7302135
+DELETE http://localhost:3000/api/weather/?id=3333229
