@@ -1,0 +1,7 @@
+const MS_PER_MINUTE = 60000
+const REQUEST_INTERVAL = 15 * MS_PER_MINUTE
+
+module.exports = {
+    MS_PER_MINUTE,
+    REQUEST_INTERVAL
+}

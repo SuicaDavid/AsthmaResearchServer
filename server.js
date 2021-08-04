@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const axios = require("axios")
 const Weather = require('./models/weather')
 const weatherRouter = require('./routes/weaters')
+const airQualityRouter = require('./routes/airQuality')
 
 // handle socket hang up error
 delete process.env['http_proxy'];
@@ -31,6 +32,7 @@ app.use(express.json())
 app.use(express.static('public'))
 
 app.use('/api/weather', weatherRouter)
+app.use('/api/aqi', airQualityRouter)
 
 app.listen(3000, ()=>{
     console.log('Server start')
