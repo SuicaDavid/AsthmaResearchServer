@@ -22,9 +22,9 @@ router.get('/', async (req, res) => {
 	req.on('error', function (err) {
 		console.log(err)
 	})
-	let city = cityListJson.find((city) => city.name === req.query.cityName)
-	req.city = city
-	console.log(city, city.name)
+	// let city = cityListJson.find((city) => city.name === req.query.cityName)
+	// req.city = city
+	// console.log(city, city.name)
 	fetchCurrentAQIByCoordination(req, res).then((result) => {
 		// airQuality.create(result)
         res.json(result)
@@ -35,9 +35,9 @@ router.get('/forecast',  async (req, res) => {
 	req.on('error', function (err) {
 		console.log(err)
 	})
-	let city = cityListJson.find((city) => city.name === req.query.cityName)
-	req.city = city
-	console.log(city, city.name)
+	// let city = cityListJson.find((city) => city.name === req.query.cityName)
+	// req.city = city
+	// console.log(city, city.name)
 	fetchFutureAQIByCoordination(req, res).then((result) => {
 		// airQuality.create(result)
         res.json(result)

@@ -7,4 +7,4 @@ GET http://localhost:3000/api/weather/?lat=51.5007&lon=0.1246&cityName=Abbey+Woo
 DELETE http://localhost:3000/api/weather/?id=3333229
 
 ### 
-GET http://localhost:3000/api/aqi/?lat=51.5007&lon=0.1246&cityName=Abbey+Wood
+GET http://localhost:3000/api/aqi/?lat=51.5007&lon=0.1246
