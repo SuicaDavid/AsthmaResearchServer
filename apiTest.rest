@@ -19,9 +19,17 @@ content-type: application/json
         {"beats": 123},
         {"beats": 456}
     ], 
-    "bloodOxygen": [], 
+    "bloodOxygen": [
+        {"saturation": 99}
+    ], 
     "activity": []
 }
 
 ### 
 GET http://localhost:3000/api/health/?userId=123456
+
+### 
+GET http://localhost:3000/api/health/heartRate
+
+### 
+GET http://localhost:3000/api/health/bloodOxygen

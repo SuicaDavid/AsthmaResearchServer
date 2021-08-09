@@ -21,7 +21,6 @@ const participant = new Schema({
 const heartRate = new Schema({
 	owner: {
 		type: Schema.Types.ObjectId, 
-		require: true,
 		ref: 'Participant',
 	},
 	heartRate: {
@@ -33,7 +32,6 @@ const heartRate = new Schema({
 const bloodOxygen = new Schema({
     owner: {
         type: Schema.Types.ObjectId, 
-		require: true,
 		ref: 'Participant',
     },
     bloodOxygen: {
@@ -43,7 +41,7 @@ const bloodOxygen = new Schema({
 })
 
 module.exports = { 
-    participant: mongoose.model('Participant', participant),
-    heartBeats: mongoose.model('HeartRate', heartRate),
-    bloodSaturation: mongoose.model('BloodOxygen', bloodOxygen)
+    Participant: mongoose.model('Participant', participant),
+    HeartRate: mongoose.model('HeartRate', heartRate),
+    BloodOxygen: mongoose.model('BloodOxygen', bloodOxygen)
 }
