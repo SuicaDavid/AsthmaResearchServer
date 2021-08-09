@@ -46,7 +46,7 @@ router.get('/forecast',  async (req, res) => {
 
 function fetchCurrentAQIByCoordination(req, res) {
 	const { lat, lon } = req.query
-	const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`
+	const url = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`
 	return instance
 		.get(url)
 		.then((data) => {
@@ -61,7 +61,7 @@ function fetchCurrentAQIByCoordination(req, res) {
 
 function fetchFutureAQIByCoordination(req, res) {
     const { lat, lon } = req.query
-	const url = `http://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`
+	const url = `https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`
 	return instance
 		.get(url)
 		.then((data) => {
