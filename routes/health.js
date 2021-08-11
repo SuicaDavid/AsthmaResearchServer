@@ -27,24 +27,17 @@ const instance = axios.create({
 	timeout: 500,
 })
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
 	let { userId, heartRate, bloodOxygen, activity } = req.body
-	saveUserId(userId)
-		.then((user) => {
-			let hearts = generateHeartRateList(user, heartRate)
-			let bloods = generateBloodOxygenList(user, bloodOxygen)
-			Promise.all([
-				saveHeartRate(hearts),
-				saveBloodOxygen(bloods),
-				user.save()
-			])
-				.then(() => {
-					res.end('Share success')
-				})
-				.catch((error) => {
-					console.log(error)
-					res.status(500).json({ message: error.message })
-				})
+	let user = await getUserByID(userId)
+	if (!user) {
+		user = await saveUserId(userId)
+	}
+	let hearts = generateHeartRateList(user, heartRate)
+	let bloods = generateBloodOxygenList(user, bloodOxygen)
+	Promise.all([saveHeartRate(hearts), saveBloodOxygen(bloods), user.save()])
+		.then(() => {
+			res.end('Share success')
 		})
 		.catch((error) => {
 			console.log(error)
@@ -52,10 +45,19 @@ router.post('/', (req, res) => {
 		})
 })
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
 	const { userId } = req.query
-	console.log(userId)
-	Participant.findOne({ userId })
+	getUserByID(userId)
+		.then((data) => {
+			res.json(data)
+		})
+		.catch((error) => {
+			res.status(500).json({ message: error.message })
+		})
+})
+
+router.get('/all', (req, res) => {
+	Participant.find({})
 		.populate(['heartRate', 'bloodOxygen'])
 		.exec(function (err, data) {
 			if (err) {
@@ -74,11 +76,11 @@ router.get('/heartRate', async (req, res) => {
 	let data = await HeartRate.find({})
 		.populate('owner')
 		.exec(function (err, data) {
-		if (err) return handleError(err);
-		console.log('The author is %s');
-		console.log(data)
-		// prints "The author is Ian Fleming"
-		});
+			if (err) return handleError(err)
+			console.log('The author is %s')
+			console.log(data)
+			// prints "The author is Ian Fleming"
+		})
 	res.json(data)
 })
 
@@ -87,11 +89,11 @@ router.get('/bloodOxygen', async (req, res) => {
 	let data = await BloodOxygen.find({})
 		.populate('owner')
 		.exec(function (err, data) {
-		if (err) return handleError(err);
-		console.log('The author is %s');
-		console.log(data)
-		// prints "The author is Ian Fleming"
-		});
+			if (err) return handleError(err)
+			console.log('The author is %s')
+			console.log(data)
+			// prints "The author is Ian Fleming"
+		})
 	res.json(data)
 })
 
@@ -107,6 +109,19 @@ function saveUserId(userId) {
 		})
 	})
 }
+
+function getUserByID(userId) {
+	return new Promise((resolve, reject) => {
+		Participant.findOne({ userId })
+			.populate(['heartRate', 'bloodOxygen'])
+			.exec(function (err, data) {
+				if (err) reject(err)
+				console.log('The data is %s', data)
+				resolve(data)
+			})
+	})
+}
+
 function generateHeartRateList(user, heartRate) {
 	let hearts = []
 	for (let i = 0; i < heartRate.length; i++) {
@@ -131,7 +146,7 @@ function generateBloodOxygenList(user, bloodOxygen) {
 	for (let i = 0; i < bloodOxygen.length; i++) {
 		let blood = new BloodOxygen({
 			owner: user.id,
-			bloodOxygen: bloodOxygen[i]
+			bloodOxygen: bloodOxygen[i],
 		})
 		user.bloodOxygen.push(blood)
 		bloods.push(blood)

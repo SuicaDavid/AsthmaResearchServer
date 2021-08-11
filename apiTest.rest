@@ -29,6 +29,9 @@ content-type: application/json
 GET http://localhost:3000/api/health/?userId=123456
 
 ### 
+GET http://localhost:3000/api/health/all
+
+### 
 GET http://localhost:3000/api/health/heartRate
 
 ### 
