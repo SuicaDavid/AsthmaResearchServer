@@ -30,8 +30,14 @@ const instance = axios.create({
 router.post('/', async (req, res) => {
 	let { userId, heartRate, bloodOxygen, activity } = req.body
 	let user = await getUserByID(userId)
+	console.log("-----------")
+	console.log(user)
 	if (!user) {
 		user = await saveUserId(userId)
+	} else {
+		clearHealthDataByID(user)
+		console.log("++++")
+		console.log(await HeartRate.find({}))
 	}
 	let hearts = generateHeartRateList(user, heartRate)
 	let bloods = generateBloodOxygenList(user, bloodOxygen)
@@ -139,6 +145,13 @@ function saveHeartRate(hearts) {
 	return HeartRate.insertMany(hearts).then(() => {
 		console.log('Heart rate save success')
 	})
+}
+
+function clearHealthDataByID(user) {
+	return Promise.all([
+		HeartRate.remove({owner: user._id}),
+		BloodOxygen.remove({owner: user._id})
+	])
 }
 
 function generateBloodOxygenList(user, bloodOxygen) {
