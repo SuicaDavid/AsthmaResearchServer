@@ -16,12 +16,13 @@ content-type: application/json
 {
     "userId": "123456", 
     "heartRate": [
-        {"beats": 123, "id": "123123", "startTime": "2021-08-04T00:38:23.305Z", "endTime": "2021-08-04T00:38:23.305Z"},
-        {"beats": 456, "id": "123124", "startTime": "2021-08-04T00:39:23.305Z", "endTime": "2021-08-04T00:39:23.305Z"}
+        {"quantity": 123, "id": "123123", "startTime": "2021-08-04T00:38:23.305Z", "endTime": "2021-08-04T00:38:23.305Z"},
+        {"quantity": 456, "id": "123124", "startTime": "2021-08-04T00:39:23.305Z", "endTime": "2021-08-04T00:39:23.305Z"}
     ], 
     "bloodOxygen": [
-        {"saturation": 99, "id": "456455", "startTime": "2021-08-04T00:38:23.305Z", "endTime": "2021-08-04T00:38:23.305Z"}
+        {"quantity": 99, "id": "456455", "startTime": "2021-08-04T00:38:23.305Z", "endTime": "2021-08-04T00:38:23.305Z"}
     ], 
+    "drugUsage": [],
     "activity": []
 }
 

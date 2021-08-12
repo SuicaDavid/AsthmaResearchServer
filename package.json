@@ -18,6 +18,8 @@
   "homepage": "https://github.com/SuicaDavid/AsthmaResearchServer#readme",
   "dependencies": {
     "axios": "^0.21.1",
+    "crypto": "^1.0.1",
+    "curve25519-js": "0.0.4",
     "express": "^4.17.1",
     "mongoose": "^5.13.3",
     "shortid": "^2.2.16"

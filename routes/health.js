@@ -11,8 +11,12 @@ const {
 	BloodOxygen,
 } = require('../models/researchData')
 const { count } = require('../models/weather')
+const {Utf8ArrayToStr} = require('../utility/Utf8ArrayUtility')
+const curve = require('curve25519-js')
+const SEED =  process.env.SEED
+const {private, public} = curve.generateKeyPair(Uint8Array.from(Buffer.from(SEED, 'hex')))
 
-Participant.remove({}, (err) => {
+Participant.remove({}, (err) => { 
 	console.log('collection removed')
 })
 HeartRate.remove({}, (err) => {
@@ -30,14 +34,10 @@ const instance = axios.create({
 router.post('/', async (req, res) => {
 	let { userId, heartRate, bloodOxygen, activity } = req.body
 	let user = await getUserByID(userId)
-	console.log("-----------")
-	console.log(user)
 	if (!user) {
 		user = await saveUserId(userId)
 	} else {
 		clearHealthDataByID(user)
-		console.log("++++")
-		console.log(await HeartRate.find({}))
 	}
 	let hearts = generateHeartRateList(user, heartRate)
 	let bloods = generateBloodOxygenList(user, bloodOxygen)
@@ -103,6 +103,15 @@ router.get('/bloodOxygen', async (req, res) => {
 	res.json(data)
 })
 
+router.post('/key', async (req, res) => {
+	console.log(req.body.key)
+	res.json(Buffer.from(public).toString('hex'))
+})
+
+router.get('/decode', async (req, res) => {
+	res.end("123")
+})
+
 function saveUserId(userId) {
 	let user = new Participant({
 		_id: new mongoose.Types.ObjectId(),
@@ -149,8 +158,8 @@ function saveHeartRate(hearts) {
 
 function clearHealthDataByID(user) {
 	return Promise.all([
-		HeartRate.remove({owner: user._id}),
-		BloodOxygen.remove({owner: user._id})
+		HeartRate.remove({ owner: user._id }),
+		BloodOxygen.remove({ owner: user._id }),
 	])
 }
 
