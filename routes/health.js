@@ -11,10 +11,21 @@ const {
 	BloodOxygen,
 } = require('../models/researchData')
 const { count } = require('../models/weather')
-const {Utf8ArrayToStr} = require('../utility/Utf8ArrayUtility')
+const {Uint8ToBase64} = require('../utility/Utf8ArrayUtility')
 const curve = require('curve25519-js')
+const { UserKey } = require('../models/userKey')
+const ed2curve = require('ed2curve')
+const nacl = require('tweetnacl')
+nacl.util = require('tweetnacl-util')
+
 const SEED =  process.env.SEED
-const {private, public} = curve.generateKeyPair(Uint8Array.from(Buffer.from(SEED, 'hex')))
+let {private, public} = curve.generateKeyPair(Uint8Array.from(Buffer.from(SEED, 'base64')))
+let privateKeyString = ed2curve.convertSecretKey(private)
+let publicKeyString = ed2curve.convertPublicKey(public)
+let nonce = nacl.randomBytes(nacl.box.nonceLength)
+
+console.log(Buffer.from(private).toString('base64'))
+console.log(Buffer.from(public).toString('base64'))
 
 Participant.remove({}, (err) => { 
 	console.log('collection removed')
@@ -23,6 +34,9 @@ HeartRate.remove({}, (err) => {
 	console.log('collection removed')
 })
 BloodOxygen.remove({}, (err) => {
+	console.log('collection removed')
+})
+UserKey.remove({}, (err) => {
 	console.log('collection removed')
 })
 
@@ -103,13 +117,52 @@ router.get('/bloodOxygen', async (req, res) => {
 	res.json(data)
 })
 
-router.post('/key', async (req, res) => {
-	console.log(req.body.key)
-	res.json(Buffer.from(public).toString('hex'))
+router.post('/activity', async (req, res) => {
+	const { userId, activity } = req.body
+	let user = await getUserByID(userId)
+	if(user) {
+
+	} else {
+		res.status(500).json({ message: error.message })
+	}
 })
 
-router.get('/decode', async (req, res) => {
-	res.end("123")
+router.post('/key', async (req, res) => {
+	for (key in req.body) {
+		let data = JSON.parse(key + req.body[key])
+		let userKey = new UserKey({
+			userId: data.userId,
+			publicKey: data.key,
+		})
+		await userKey.save()
+		res.json({
+			serverKey: Buffer.from(public).toString('base64'),
+			nonce: Buffer.from(nonce).toString('hex')
+		})
+		break
+	}
+})
+
+router.post('/decode', async (req, res) => {
+	for (key in req.body) {
+		let data = JSON.parse(key + req.body[key])
+		console.log(data)
+		let secret = data.secret
+		UserKey.findOne({userId: data.userId})
+			.then(user=>{
+				console.log('----')
+				let secretMsg = Uint8Array.from(Buffer.from(secret, 'base64'))
+				console.log(secret, secretMsg)
+				let decryptedMessage = nacl.box.open(secretMsg, nonce, ed2curve.convertPublicKey(user.publicKey), privateKeyString);
+				console.log(decryptedMessage)
+				let message = new TextDecoder().decode(decryptedMessage)
+				console.log(message)
+				res.end("123")
+			})
+			.catch(error=>{
+				console.log(error)
+			})
+	}
 })
 
 function saveUserId(userId) {
