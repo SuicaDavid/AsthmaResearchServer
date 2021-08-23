@@ -55,6 +55,7 @@ router.post('/', async (req, res) => {
 	}
 	let hearts = generateHeartRateList(user, heartRate)
 	let bloods = generateBloodOxygenList(user, bloodOxygen)
+	// todo: share activity and drug usage
 	Promise.all([saveHeartRate(hearts), saveBloodOxygen(bloods), user.save()])
 		.then(() => {
 			res.end('Share success')
@@ -121,9 +122,23 @@ router.post('/activity', async (req, res) => {
 	const { userId, activity } = req.body
 	let user = await getUserByID(userId)
 	if(user) {
-
+		user.activityType = activity
+		user.save()
+		res.json(user)
 	} else {
-		res.status(500).json({ message: error.message })
+		res.status(500).json({ message: "No user" })
+	}
+})
+
+router.get('/activity', async (req, res) => {
+	const { userId } = req.query
+	let user = await getUserByID(userId)
+	console.log(req.body)
+	console.log(userId, user)
+	if(user) {
+		res.json(user)
+	} else {
+		res.status(500).json({ message: "No user" })
 	}
 })
 

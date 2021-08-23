@@ -15,6 +15,14 @@ const participant = new Schema({
     bloodOxygen: [{ 
         type: Schema.Types.ObjectId, 
         ref: 'BloodOxygen' 
+    }],
+    activityType: {
+        type: Object,
+        require: false
+    },
+    activity: [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Activity' 
     }]
 })
 
@@ -40,8 +48,20 @@ const bloodOxygen = new Schema({
     }
 })
 
+const activity = new Schema({
+    owner: {
+        type: Schema.Types.ObjectId, 
+		ref: 'Participant',
+    },
+    activity: {
+        type: Array,
+        require: true
+    }
+})
+
 module.exports = { 
     Participant: mongoose.model('Participant', participant),
     HeartRate: mongoose.model('HeartRate', heartRate),
-    BloodOxygen: mongoose.model('BloodOxygen', bloodOxygen)
+    BloodOxygen: mongoose.model('BloodOxygen', bloodOxygen),
+    Activity: mongoose.model('Activity', activity)
 }

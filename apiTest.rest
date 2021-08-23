@@ -37,3 +37,18 @@ GET http://localhost:3000/api/health/heartRate
 
 ### 
 GET http://localhost:3000/api/health/bloodOxygen
+
+### 
+POST http://localhost:3000/api/health/activity/
+content-type: application/json
+
+{
+    "userId": "123456",
+    "activity": {
+        "name": "walk",
+        "timeInterval": "1-day"
+    }
+}
+
+### 
+GET http://localhost:3000/api/health/activity/?userId=123456
