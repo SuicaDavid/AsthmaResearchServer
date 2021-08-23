@@ -22,8 +22,12 @@ content-type: application/json
     "bloodOxygen": [
         {"quantity": 99, "id": "456455", "startTime": "2021-08-04T00:38:23.305Z", "endTime": "2021-08-04T00:38:23.305Z"}
     ], 
-    "drugUsage": [],
-    "activity": []
+    "drug": [
+        {"name": "Aspirin", "id": "123", "time": "2021-08-04T00:38:23.305Z"}
+    ],
+    "activity": [
+        {"name": "walk", "quantity": 1000, "id": "456455", "time": "2021-08-04T00:38:23.305Z"}
+    ]
 }
 
 ### 
@@ -39,7 +43,13 @@ GET http://localhost:3000/api/health/heartRate
 GET http://localhost:3000/api/health/bloodOxygen
 
 ### 
-POST http://localhost:3000/api/health/activity/
+GET http://localhost:3000/api/health/activity
+
+### 
+GET http://localhost:3000/api/health/drug
+
+### 
+POST http://localhost:3000/api/health/plan/
 content-type: application/json
 
 {
@@ -51,4 +61,4 @@ content-type: application/json
 }
 
 ### 
-GET http://localhost:3000/api/health/activity/?userId=123456
+GET http://localhost:3000/api/health/plan/?userId=123456

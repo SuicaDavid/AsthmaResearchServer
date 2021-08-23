@@ -9,6 +9,8 @@ const {
 	Participant,
 	HeartRate,
 	BloodOxygen,
+	Activity,
+	Drug
 } = require('../models/researchData')
 const { count } = require('../models/weather')
 const {Uint8ToBase64} = require('../utility/Utf8ArrayUtility')
@@ -36,6 +38,12 @@ HeartRate.remove({}, (err) => {
 BloodOxygen.remove({}, (err) => {
 	console.log('collection removed')
 })
+Activity.remove({}, (err) => {
+	console.log('collection removed')
+})
+Drug.remove({}, (err) => {
+	console.log('collection removed')
+})
 UserKey.remove({}, (err) => {
 	console.log('collection removed')
 })
@@ -46,7 +54,7 @@ const instance = axios.create({
 })
 
 router.post('/', async (req, res) => {
-	let { userId, heartRate, bloodOxygen, activity } = req.body
+	let { userId, heartRate, bloodOxygen, activity, drug } = req.body
 	let user = await getUserByID(userId)
 	if (!user) {
 		user = await saveUserId(userId)
@@ -55,8 +63,16 @@ router.post('/', async (req, res) => {
 	}
 	let hearts = generateHeartRateList(user, heartRate)
 	let bloods = generateBloodOxygenList(user, bloodOxygen)
+	let activitys = generateActivityList(user, activity)
+	let drugs = generateDrugList(user, drug)
 	// todo: share activity and drug usage
-	Promise.all([saveHeartRate(hearts), saveBloodOxygen(bloods), user.save()])
+	Promise.all([
+		saveHeartRate(hearts), 
+		saveBloodOxygen(bloods),
+		saveActivity(activitys),
+		saveDrug(drugs),
+		user.save()
+	])
 		.then(() => {
 			res.end('Share success')
 		})
@@ -118,7 +134,34 @@ router.get('/bloodOxygen', async (req, res) => {
 	res.json(data)
 })
 
-router.post('/activity', async (req, res) => {
+router.get('/activity', async (req, res) => {
+	const { userId } = req.query
+	let data = await Activity.find({})
+		.populate('owner')
+		.exec(function (err, data) {
+			if (err) return handleError(err)
+			console.log('The author is %s')
+			console.log(data)
+			// prints "The author is Ian Fleming"
+		})
+	res.json(data)
+})
+
+router.get('/drug', async (req, res) => {
+	const { userId } = req.query
+	let data = await Drug.find({})
+		.populate('owner')
+		.exec(function (err, data) {
+			if (err) return handleError(err)
+			console.log('The author is %s')
+			console.log(data)
+			// prints "The author is Ian Fleming"
+		})
+	res.json(data)
+})
+
+
+router.post('/plan', async (req, res) => {
 	const { userId, activity } = req.body
 	let user = await getUserByID(userId)
 	if(user) {
@@ -130,7 +173,7 @@ router.post('/activity', async (req, res) => {
 	}
 })
 
-router.get('/activity', async (req, res) => {
+router.get('/plan', async (req, res) => {
 	const { userId } = req.query
 	let user = await getUserByID(userId)
 	console.log(req.body)
@@ -196,7 +239,7 @@ function saveUserId(userId) {
 function getUserByID(userId) {
 	return new Promise((resolve, reject) => {
 		Participant.findOne({ userId })
-			.populate(['heartRate', 'bloodOxygen'])
+			.populate(['heartRate', 'bloodOxygen', 'activity', 'drug'])
 			.exec(function (err, data) {
 				if (err) reject(err)
 				console.log('The data is %s', data)
@@ -228,6 +271,8 @@ function clearHealthDataByID(user) {
 	return Promise.all([
 		HeartRate.remove({ owner: user._id }),
 		BloodOxygen.remove({ owner: user._id }),
+		Activity.remove({ owner: user._id }),
+		Drug.remove({ owner: user._id })
 	])
 }
 
@@ -249,5 +294,45 @@ function saveBloodOxygen(bloods) {
 		console.log('blood oxygen save success')
 	})
 }
+
+
+function generateActivityList(user, activityList) {
+	let activitys = []
+	for (let i = 0; i < activityList.length; i++) {
+		let activity = new Activity({
+			owner: user.id,
+			activity: activityList[i],
+		})
+		user.activity.push(activity)
+		activitys.push(activity)
+	}
+	return activitys
+}
+
+function saveActivity(activitys) {
+	return Activity.insertMany(activitys).then(() => {
+		console.log('Activity save success')
+	})
+}
+
+function generateDrugList(user, drugList) {
+	let drugs = []
+	for (let i = 0; i < drugList.length; i++) {
+		let drug = new Drug({
+			owner: user.id,
+			drug: drugList[i],
+		})
+		user.drug.push(drug)
+		drugs.push(drug)
+	}
+	return drugs
+}
+
+function saveDrug(drugs) {
+	return Drug.insertMany(drugs).then(() => {
+		console.log('Drug save success')
+	})
+}
+
 
 module.exports = router
