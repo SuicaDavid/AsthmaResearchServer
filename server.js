@@ -9,6 +9,7 @@ const Weather = require('./models/weather')
 const weatherRouter = require('./routes/weaters')
 const airQualityRouter = require('./routes/airQuality')
 const healthRouter = require('./routes/health')
+const multer = require('multer')
 
 // handle socket hang up error
 delete process.env['http_proxy']
@@ -26,12 +27,10 @@ const db = mongoose.connection
 db.on('error', (error) => console.log(error))
 db.on('open', () => console.log('Connected to DB'))
 
-app.use(
-	express.urlencoded({
-		extended: true,
-	})
-)
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(multer().array())
+
 app.use(express.static('public'))
 
 app.use(function (req, res, next) {

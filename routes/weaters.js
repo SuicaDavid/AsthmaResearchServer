@@ -19,9 +19,9 @@ router.get('/', async (req, res)=>{
     req.on('error',function(err){console.log(err)})
     let city = cityListJson.find(city=>city.name === req.query.cityName)
     req.city = city
-    console.log(city, city.name)
+    // console.log(city, city.name)
     let savedWeather = await weather.findOne({name: city.name}).exec()
-    console.log(savedWeather)
+    // console.log(savedWeather)
     if(savedWeather) {
         let now = setUTCTime()
         console.log(now, savedWeather.updatedDate, now - savedWeather.updatedDate, REQUEST_INTERVAL)
