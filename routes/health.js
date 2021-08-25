@@ -54,7 +54,7 @@ const instance = axios.create({
 })
 
 router.post('/', async (req, res) => {
-	let { userId, heartRate, bloodOxygen, activity, drug } = req.body
+	let { userId, heartRate, bloodOxygen, activity, drugUsage } = req.body
 	let user = await getUserByID(userId)
 	if (!user) {
 		user = await saveUserId(userId)
@@ -64,7 +64,7 @@ router.post('/', async (req, res) => {
 	let hearts = generateHeartRateList(user, heartRate)
 	let bloods = generateBloodOxygenList(user, bloodOxygen)
 	let activitys = generateActivityList(user, activity)
-	let drugs = generateDrugList(user, drug)
+	let drugs = generateDrugList(user, drugUsage)
 	// todo: share activity and drug usage
 	Promise.all([
 		saveHeartRate(hearts), 

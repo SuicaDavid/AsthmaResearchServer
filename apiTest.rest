@@ -22,7 +22,7 @@ content-type: application/json
     "bloodOxygen": [
         {"quantity": 99, "id": "456455", "startTime": "2021-08-04T00:38:23.305Z", "endTime": "2021-08-04T00:38:23.305Z"}
     ], 
-    "drug": [
+    "drugUsage": [
         {"name": "Aspirin", "id": "123", "time": "2021-08-04T00:38:23.305Z"}
     ],
     "activity": [
