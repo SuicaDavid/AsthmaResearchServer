@@ -14,7 +14,6 @@ const {
 } = require('../models/researchData')
 const { count } = require('../models/weather')
 const { Uint8ToBase64 } = require('../utility/Utf8ArrayUtility')
-const { bodyHandle } = require('../utility/requestUtility')
 const curve = require('curve25519-js')
 const { UserKey } = require('../models/userKey')
 const ed2curve = require('ed2curve')
@@ -55,7 +54,6 @@ const instance = axios.create({
 })
 
 router.post('/', async (req, res) => {
-	bodyHandle(req)
 	let { userId, heartRate, bloodOxygen, activity, drug } = req.body
 	let user = await getUserByID(userId)
 	if (!user) {
