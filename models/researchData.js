@@ -11,6 +11,9 @@ const participant = new Schema({
     activityType: {
         type: Object,
     },
+    drugType: {
+        type: Object,
+    },
     heartRate: [{ 
         type: Schema.Types.ObjectId, 
         ref: 'HeartRate' 

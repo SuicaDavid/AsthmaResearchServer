@@ -68,6 +68,10 @@ content-type: application/json
     "activity": {
         "name": "run",
         "timeInterval": "2-day"
+    },
+    "drug": {
+        "name": "Aspirin",
+        "timeInterval": "2-day"
     }
 }
 

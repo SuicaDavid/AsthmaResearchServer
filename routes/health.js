@@ -162,10 +162,13 @@ router.get('/drug', async (req, res) => {
 })
 
 router.post('/plan/all', async (req, res) => {
-	const { activity } = req.body
+	const { activity, drug } = req.body
 	console.log(activity)
 	try {
-		await Participant.updateMany({}, { $set: { activityType: activity }})
+		await Participant.updateMany({}, { $set: { 
+			activityType: activity,
+			drugType: drug
+		}})
 		res.end("Success")
 	} catch(error) {
 		console.log(error)
@@ -174,11 +177,12 @@ router.post('/plan/all', async (req, res) => {
 })
 
 router.post('/plan', async (req, res) => {
-	const { userId, activity } = req.body
+	const { userId, activity, drug } = req.body
 	console.log(userId, activity)
 	let user = await getUserByID(userId)
 	if(user) {
-		user.activityType = activity
+		if(activity) user.activityType = activity
+		if(drug) user.drugType = drug
 		user.save()
 		res.json(activity)
 	} else {
@@ -241,6 +245,10 @@ function saveUserId(userId) {
 		_id: new mongoose.Types.ObjectId(),
 		userId,
 		activityType: {
+			"name": "no",
+        	"timeInterval": ""
+		},
+		drugType: {
 			"name": "no",
         	"timeInterval": ""
 		}
