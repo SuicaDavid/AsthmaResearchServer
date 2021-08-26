@@ -8,6 +8,9 @@ const participant = new Schema({
 		type: String,
 		require: true,
 	},
+    activityType: {
+        type: Object,
+    },
     heartRate: [{ 
         type: Schema.Types.ObjectId, 
         ref: 'HeartRate' 
@@ -16,10 +19,6 @@ const participant = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'BloodOxygen' 
     }],
-    activityType: {
-        type: Object,
-        require: false
-    },
     activity: [{ 
         type: Schema.Types.ObjectId, 
         ref: 'Activity' 

@@ -74,7 +74,8 @@ router.post('/', async (req, res) => {
 		user.save()
 	])
 		.then(() => {
-			res.end('Share success')
+			console.log(user.userId)
+			res.end(`Share success`)
 		})
 		.catch((error) => {
 			console.log(error)
@@ -160,14 +161,26 @@ router.get('/drug', async (req, res) => {
 	res.json(data)
 })
 
+router.post('/plan/all', async (req, res) => {
+	const { activity } = req.body
+	console.log(activity)
+	try {
+		await Participant.updateMany({}, { $set: { activityType: activity }})
+		res.end("Success")
+	} catch(error) {
+		console.log(error)
+		res.status(500).json({ message: error.message })
+	}
+})
 
 router.post('/plan', async (req, res) => {
 	const { userId, activity } = req.body
+	console.log(userId, activity)
 	let user = await getUserByID(userId)
 	if(user) {
 		user.activityType = activity
 		user.save()
-		res.json(user)
+		res.json(activity)
 	} else {
 		res.status(500).json({ message: "No user" })
 	}
@@ -176,10 +189,10 @@ router.post('/plan', async (req, res) => {
 router.get('/plan', async (req, res) => {
 	const { userId } = req.query
 	let user = await getUserByID(userId)
-	console.log(req.body)
-	console.log(userId, user)
+	console.log(req.query)
 	if(user) {
-		res.json(user)
+		console.log(user.activityType)
+		res.json(user.activityType)
 	} else {
 		res.status(500).json({ message: "No user" })
 	}
@@ -227,6 +240,10 @@ function saveUserId(userId) {
 	let user = new Participant({
 		_id: new mongoose.Types.ObjectId(),
 		userId,
+		activityType: {
+			"name": "no",
+        	"timeInterval": ""
+		}
 	})
 	return new Promise((resolve, reject) => {
 		let participant = Participant.create(user, (err) => {
@@ -255,6 +272,7 @@ function generateHeartRateList(user, heartRate) {
 			owner: user.id,
 			heartRate: heartRate[i],
 		})
+		console.log(heart)
 		user.heartRate.push(heart)
 		hearts.push(heart)
 	}

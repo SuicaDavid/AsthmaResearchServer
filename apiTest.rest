@@ -61,14 +61,13 @@ content-type: application/json
 }
 
 ### 
-POST http://localhost:3000/api/health/plan/
+POST http://localhost:3000/api/health/plan/all
 content-type: application/json
 
 {
-    "userId": "E2F90178-87B2-4E9F-B867-2C1EC59A5126",
     "activity": {
-        "name": "walk",
-        "timeInterval": "1-day"
+        "name": "run",
+        "timeInterval": "2-day"
     }
 }
 
