@@ -196,7 +196,11 @@ router.get('/plan', async (req, res) => {
 	console.log(req.query)
 	if(user) {
 		console.log(user.activityType)
-		res.json(user.activityType)
+		let plans = {
+			activity: user.activityType,
+			drug: user.drugType
+		}
+		res.json(plans)
 	} else {
 		res.status(500).json({ message: "No user" })
 	}
