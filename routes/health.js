@@ -106,7 +106,7 @@ router.delete('/', async (req, res) => {
 				res.status(500).json({ message: error.message })
 				return
 			}
-			console.log('The data is %s', data)
+			console.log(data)
 		})
 })
 
@@ -119,7 +119,7 @@ router.get('/all', (req, res) => {
 				res.status(500).json({ message: error.message })
 				return
 			}
-			console.log('The data is %s', data)
+			console.log(data)
 			res.send("Delete success")
 			// prints "The author is Ian Fleming"
 		})
