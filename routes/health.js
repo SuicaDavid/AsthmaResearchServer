@@ -10,7 +10,7 @@ const {
 	HeartRate,
 	BloodOxygen,
 	Activity,
-	Drug
+	Drug,
 } = require('../models/researchData')
 const { count } = require('../models/weather')
 const { Uint8ToBase64 } = require('../utility/Utf8ArrayUtility')
@@ -20,8 +20,10 @@ const ed2curve = require('ed2curve')
 const nacl = require('tweetnacl')
 nacl.util = require('tweetnacl-util')
 
-const SEED =  process.env.SEED
-let {private, public} = curve.generateKeyPair(Uint8Array.from(Buffer.from(SEED, 'base64')))
+const SEED = process.env.SEED
+let { private, public } = curve.generateKeyPair(
+	Uint8Array.from(Buffer.from(SEED, 'base64'))
+)
 let privateKeyString = ed2curve.convertSecretKey(private)
 let publicKeyString = ed2curve.convertPublicKey(public)
 let nonce = nacl.randomBytes(nacl.box.nonceLength)
@@ -29,7 +31,7 @@ let nonce = nacl.randomBytes(nacl.box.nonceLength)
 console.log(Buffer.from(private).toString('base64'))
 console.log(Buffer.from(public).toString('base64'))
 
-Participant.remove({}, (err) => { 
+Participant.remove({}, (err) => {
 	console.log('collection removed')
 })
 HeartRate.remove({}, (err) => {
@@ -67,11 +69,11 @@ router.post('/', async (req, res) => {
 	let drugs = generateDrugList(user, drugUsage)
 	// todo: share activity and drug usage
 	Promise.all([
-		saveHeartRate(hearts), 
+		saveHeartRate(hearts),
 		saveBloodOxygen(bloods),
 		saveActivity(activitys),
 		saveDrug(drugs),
-		user.save()
+		user.save(),
 	])
 		.then(() => {
 			console.log(user.userId)
@@ -94,9 +96,10 @@ router.get('/', async (req, res) => {
 		})
 })
 
-router.get('/all', (req, res) => {
-	Participant.find({})
-		.populate(['heartRate', 'bloodOxygen'])
+router.delete('/', async (req, res) => {
+	const { userId } = req.query
+	Participant.deleteOne({ userId })
+		.populate(['heartRate', 'bloodOxygen', 'activity', 'drug'])
 		.exec(function (err, data) {
 			if (err) {
 				console.log(err)
@@ -104,7 +107,20 @@ router.get('/all', (req, res) => {
 				return
 			}
 			console.log('The data is %s', data)
-			res.json(data)
+		})
+})
+
+router.get('/all', (req, res) => {
+	Participant.find({})
+		.populate(['heartRate', 'bloodOxygen', 'activity', 'drug'])
+		.exec(function (err, data) {
+			if (err) {
+				console.log(err)
+				res.status(500).json({ message: error.message })
+				return
+			}
+			console.log('The data is %s', data)
+			res.send("Delete success")
 			// prints "The author is Ian Fleming"
 		})
 })
@@ -165,12 +181,17 @@ router.post('/plan/all', async (req, res) => {
 	const { activity, drug } = req.body
 	console.log(activity)
 	try {
-		await Participant.updateMany({}, { $set: { 
-			activityType: activity,
-			drugType: drug
-		}})
-		res.end("Success")
-	} catch(error) {
+		await Participant.updateMany(
+			{},
+			{
+				$set: {
+					activityType: activity,
+					drugType: drug,
+				},
+			}
+		)
+		res.end('Success')
+	} catch (error) {
 		console.log(error)
 		res.status(500).json({ message: error.message })
 	}
@@ -180,13 +201,13 @@ router.post('/plan', async (req, res) => {
 	const { userId, activity, drug } = req.body
 	console.log(userId, activity)
 	let user = await getUserByID(userId)
-	if(user) {
-		if(activity) user.activityType = activity
-		if(drug) user.drugType = drug
+	if (user) {
+		if (activity) user.activityType = activity
+		if (drug) user.drugType = drug
 		user.save()
 		res.json(activity)
 	} else {
-		res.status(500).json({ message: "No user" })
+		res.status(500).json({ message: 'No user' })
 	}
 })
 
@@ -194,15 +215,15 @@ router.get('/plan', async (req, res) => {
 	const { userId } = req.query
 	let user = await getUserByID(userId)
 	console.log(req.query)
-	if(user) {
+	if (user) {
 		console.log(user.activityType)
 		let plans = {
 			activity: user.activityType,
-			drug: user.drugType
+			drug: user.drugType,
 		}
 		res.json(plans)
 	} else {
-		res.status(500).json({ message: "No user" })
+		res.status(500).json({ message: 'No user' })
 	}
 })
 
@@ -216,7 +237,7 @@ router.post('/key', async (req, res) => {
 		await userKey.save()
 		res.json({
 			serverKey: Buffer.from(public).toString('base64'),
-			nonce: Buffer.from(nonce).toString('hex')
+			nonce: Buffer.from(nonce).toString('hex'),
 		})
 		break
 	}
@@ -227,18 +248,23 @@ router.post('/decode', async (req, res) => {
 		let data = JSON.parse(key + req.body[key])
 		console.log(data)
 		let secret = data.secret
-		UserKey.findOne({userId: data.userId})
-			.then(user=>{
+		UserKey.findOne({ userId: data.userId })
+			.then((user) => {
 				console.log('----')
 				let secretMsg = Uint8Array.from(Buffer.from(secret, 'base64'))
 				console.log(secret, secretMsg)
-				let decryptedMessage = nacl.box.open(secretMsg, nonce, ed2curve.convertPublicKey(user.publicKey), privateKeyString);
+				let decryptedMessage = nacl.box.open(
+					secretMsg,
+					nonce,
+					ed2curve.convertPublicKey(user.publicKey),
+					privateKeyString
+				)
 				console.log(decryptedMessage)
 				let message = new TextDecoder().decode(decryptedMessage)
 				console.log(message)
-				res.end("123")
+				res.end('123')
 			})
-			.catch(error=>{
+			.catch((error) => {
 				console.log(error)
 			})
 	}
@@ -249,13 +275,13 @@ function saveUserId(userId) {
 		_id: new mongoose.Types.ObjectId(),
 		userId,
 		activityType: {
-			"name": "no",
-        	"timeInterval": ""
+			name: 'no',
+			timeInterval: '',
 		},
 		drugType: {
-			"name": "no",
-        	"timeInterval": ""
-		}
+			name: 'no',
+			timeInterval: '',
+		},
 	})
 	return new Promise((resolve, reject) => {
 		let participant = Participant.create(user, (err) => {
@@ -302,7 +328,7 @@ function clearHealthDataByID(user) {
 		HeartRate.remove({ owner: user._id }),
 		BloodOxygen.remove({ owner: user._id }),
 		Activity.remove({ owner: user._id }),
-		Drug.remove({ owner: user._id })
+		Drug.remove({ owner: user._id }),
 	])
 }
 
@@ -324,7 +350,6 @@ function saveBloodOxygen(bloods) {
 		console.log('blood oxygen save success')
 	})
 }
-
 
 function generateActivityList(user, activityList) {
 	let activitys = []
@@ -363,6 +388,5 @@ function saveDrug(drugs) {
 		console.log('Drug save success')
 	})
 }
-
 
 module.exports = router

@@ -23,7 +23,7 @@ content-type: application/json
         {"quantity": 99, "id": "456455", "startTime": "2021-08-04T00:38:23.305Z", "endTime": "2021-08-04T00:38:23.305Z"}
     ], 
     "drugUsage": [
-        {"name": "Aspirin", "id": "123", "time": "2021-08-04T00:38:23.305Z"}
+        {"name": "Aspirin", "quantity": 1, "id": "123", "time": "2021-08-04T00:38:23.305Z"}
     ],
     "activity": [
         {"name": "walk", "quantity": 1000, "id": "456455", "time": "2021-08-04T00:38:23.305Z"}
@@ -32,6 +32,9 @@ content-type: application/json
 
 ### 
 GET http://localhost:3000/api/health/?userId=123456
+
+### 
+DELETE http://localhost:3000/api/health/?userId=123456
 
 ### 
 GET http://localhost:3000/api/health/all
@@ -56,6 +59,7 @@ content-type: application/json
     "userId": "123456",
     "activity": {
         "name": "walk",
+        "quantity": 1000,
         "timeInterval": "1-day"
     }
 }
@@ -67,10 +71,12 @@ content-type: application/json
 {
     "activity": {
         "name": "run",
+        "quantity": 1000,
         "timeInterval": "2-day"
     },
     "drug": {
         "name": "Aspirin",
+        "quantity": 1,
         "timeInterval": "2-day"
     }
 }
