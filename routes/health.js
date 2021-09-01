@@ -31,24 +31,24 @@ let nonce = nacl.randomBytes(nacl.box.nonceLength)
 console.log(Buffer.from(private).toString('base64'))
 console.log(Buffer.from(public).toString('base64'))
 
-Participant.remove({}, (err) => {
-	console.log('collection removed')
-})
-HeartRate.remove({}, (err) => {
-	console.log('collection removed')
-})
-BloodOxygen.remove({}, (err) => {
-	console.log('collection removed')
-})
-Activity.remove({}, (err) => {
-	console.log('collection removed')
-})
-Drug.remove({}, (err) => {
-	console.log('collection removed')
-})
-UserKey.remove({}, (err) => {
-	console.log('collection removed')
-})
+// Participant.remove({}, (err) => {
+// 	console.log('collection removed')
+// })
+// HeartRate.remove({}, (err) => {
+// 	console.log('collection removed')
+// })
+// BloodOxygen.remove({}, (err) => {
+// 	console.log('collection removed')
+// })
+// Activity.remove({}, (err) => {
+// 	console.log('collection removed')
+// })
+// Drug.remove({}, (err) => {
+// 	console.log('collection removed')
+// })
+// UserKey.remove({}, (err) => {
+// 	console.log('collection removed')
+// })
 
 const instance = axios.create({
 	httpsAgent: new https.Agent({ keepAlive: true }),
@@ -106,6 +106,7 @@ router.delete('/', async (req, res) => {
 				res.status(500).json({ message: error.message })
 				return
 			}
+			res.send("Delete success")
 			console.log(data)
 		})
 })
@@ -119,8 +120,8 @@ router.get('/all', (req, res) => {
 				res.status(500).json({ message: error.message })
 				return
 			}
-			console.log(data)
-			res.send("Delete success")
+			console.log("fetch all success")
+			res.json(data)
 			// prints "The author is Ian Fleming"
 		})
 })

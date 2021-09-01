@@ -1,17 +1,17 @@
-import {fetchUserHealthData} from "../request/healthDataRequest"
+import {fetchAllUserHealthData, fetchUserHealthData} from "../request/healthDataRequest"
+import {createContext, useMemo} from "react"
+import {flattenHealthData} from "../utility/healthDataCalculator"
 
-class HealthManagement {
-    healthData = {}
-    constructor() {
-        this.updateHealthData()
-    }
+export default class HealthManagement {
+    static healthData = []
 
-    updateHealthData() {
-        fetchUserHealthData(123456)
-            .then(data => {
-                this.healthData = data
+    static updateAllHealthData() {
+        return fetchAllUserHealthData()
+            .then(data=>{
+                console.log(data)
+                this.healthData = flattenHealthData(data)
+                console.log(this.healthData)
+                return this.healthData
             })
     }
 }
-
-export default new HealthManagement()
