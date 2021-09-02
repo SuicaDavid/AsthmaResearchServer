@@ -21,7 +21,9 @@ export function flattenHealthData(healthData) {
 }
 
 export function flattenHealthDetail(healthDetail) {
-    return healthDetail.map(detail=>{
+    healthDetail = washHealthDetail(healthDetail)
+    return healthDetail.map(detail => {
+        console.log(detail)
         let data = {
             userId: detail.owner.userId
         }
@@ -31,4 +33,8 @@ export function flattenHealthDetail(healthDetail) {
         }
         return data
     })
+}
+
+export function washHealthDetail(healthDetail) {
+    return healthDetail.filter(detail => detail.owner)
 }

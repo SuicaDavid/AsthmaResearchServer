@@ -199,7 +199,7 @@ router.post('/plan', async (req, res) => {
 		if (activity) user.activityType = activity
 		if (drug) user.drugType = drug
 		user.save()
-		res.json(activity)
+		res.json({activity, drug})
 	} else {
 		res.status(500).json({ message: 'No user' })
 	}
