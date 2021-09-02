@@ -1,3 +1,5 @@
+import {keys} from "@material-ui/core/styles/createBreakpoints"
+
 export function averageHealthData(data) {
     return data.reduce((p, c) => Number.isInteger(p) ? p + parseInt(c.quantity, 10) : parseInt(p.quantity, 10) + parseInt(c.quantity, 10), 0) / data.length
 }
@@ -13,6 +15,19 @@ export function flattenHealthData(healthData) {
                     return element
                 })
             }
+        }
+        return data
+    })
+}
+
+export function flattenHealthDetail(healthDetail) {
+    return healthDetail.map(detail=>{
+        let data = {
+            userId: detail.owner.userId
+        }
+        let dataType = Object.keys(detail)[0]
+        for (let key in detail[dataType][0]) {
+            data[key] = detail[dataType][0][key]
         }
         return data
     })

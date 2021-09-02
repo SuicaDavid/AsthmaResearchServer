@@ -115,14 +115,9 @@ router.get('/all', (req, res) => {
 	Participant.find({})
 		.populate(['heartRate', 'bloodOxygen', 'activity', 'drug'])
 		.exec(function (err, data) {
-			if (err) {
-				console.log(err)
-				res.status(500).json({ message: error.message })
-				return
-			}
+			if (err) handleError(err)
 			console.log("fetch all success")
 			res.json(data)
-			// prints "The author is Ian Fleming"
 		})
 })
 
@@ -134,9 +129,8 @@ router.get('/heartRate', async (req, res) => {
 			if (err) return handleError(err)
 			console.log('The author is %s')
 			console.log(data)
-			// prints "The author is Ian Fleming"
+			res.json(data)
 		})
-	res.json(data)
 })
 
 router.get('/bloodOxygen', async (req, res) => {
@@ -147,9 +141,8 @@ router.get('/bloodOxygen', async (req, res) => {
 			if (err) return handleError(err)
 			console.log('The author is %s')
 			console.log(data)
-			// prints "The author is Ian Fleming"
+			res.json(data)
 		})
-	res.json(data)
 })
 
 router.get('/activity', async (req, res) => {
@@ -161,8 +154,8 @@ router.get('/activity', async (req, res) => {
 			console.log('The author is %s')
 			console.log(data)
 			// prints "The author is Ian Fleming"
+			res.json(data)
 		})
-	res.json(data)
 })
 
 router.get('/drug', async (req, res) => {
@@ -174,8 +167,8 @@ router.get('/drug', async (req, res) => {
 			console.log('The author is %s')
 			console.log(data)
 			// prints "The author is Ian Fleming"
+			res.json(data)
 		})
-	res.json(data)
 })
 
 router.post('/plan/all', async (req, res) => {
@@ -388,6 +381,12 @@ function saveDrug(drugs) {
 	return Drug.insertMany(drugs).then(() => {
 		console.log('Drug save success')
 	})
+}
+
+function handleError(err) {
+	console.log(err)
+	res.status(500).json({ message: error.message })
+	return
 }
 
 module.exports = router

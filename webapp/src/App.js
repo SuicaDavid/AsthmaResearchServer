@@ -3,12 +3,14 @@ import {fetchAllUserHealthData, fetchUserHealthData} from "./request/healthDataR
 import {AppBar, Tab, Tabs} from "@material-ui/core"
 import TabPanel from './component/TabPanel'
 import {createContext, useState} from "react"
-import healthManagement from "./model/healthManagement"
 import UserPage from "./page/UserPage"
+import HeartRatePage from "./page/HeartRatePage"
+import BloodOxygenPage from "./page/BloodOxygenPage"
+import ActivityPage from "./page/ActivityPage"
+import DrugPage from "./page/DrugPage"
 
 function App() {
     const [tabIndex, setTabIndex] = useState(0)
-    const [showingDiagram, setShowingDiagram] = useState(false)
     const handleChange = (event, newIndex) => {
         setTabIndex(newIndex)
     }
@@ -27,16 +29,16 @@ function App() {
                 <UserPage/>
             </TabPanel>
             <TabPanel value={tabIndex} index={1}>
-                Heart Rate
+                <HeartRatePage/>
             </TabPanel>
             <TabPanel value={tabIndex} index={2}>
-                Blood Oxygen
+                <BloodOxygenPage/>
             </TabPanel>
             <TabPanel value={tabIndex} index={3}>
-                Activity
+                <ActivityPage/>
             </TabPanel>
             <TabPanel value={tabIndex} index={4}>
-                Drug
+                <DrugPage/>
             </TabPanel>
         </div>
     )
