@@ -183,14 +183,14 @@ export default function UserPage() {
         if (activityType !== 0) {
             requestData.activity = {
                 name: activityType === 1 ? "walk" : "run",
-                quantity: activityQuantity,
+                quantity: parseInt(activityQuantity, 10),
                 timeInterval: `${activityTime}-day`
             }
         }
         if (drugType !== 0) {
             requestData.drug = {
                 name: drugType === 1 ? "Xanthine" : "Antileukotriene",
-                quantity: drugQuantity,
+                quantity: parseInt(drugQuantity, 10),
                 timeInterval: `${drugTime}-day`
             }
         }
@@ -212,14 +212,14 @@ export default function UserPage() {
         if (activityType !== 0) {
             requestData.activity = {
                 name: activityType === 1 ? "walk" : "run",
-                quantity: activityQuantity,
+                quantity: parseInt(activityQuantity, 10),
                 timeInterval: `${activityTime}-day`
             }
         }
         if (drugType !== 0) {
             requestData.drug = {
                 name: drugType === 1 ? "Xanthine" : "Antileukotriene",
-                quantity: drugQuantity,
+                quantity: parseInt(drugQuantity, 10),
                 timeInterval: `${drugTime}-day`
             }
         }
@@ -334,6 +334,7 @@ export default function UserPage() {
                                     fullWidth
                                     min={0}
                                     required
+                                    value={activityQuantity}
                                     InputProps={{inputProps: {min: 0}}}
                                     onChange={(event) => setActivityQuantity(event.target.value)}
                                 />
@@ -342,13 +343,13 @@ export default function UserPage() {
                                 </RadioGroup>
                                 <TextField
                                     autoFocus
-                                    // margin="dense"
                                     id="time"
                                     label="Daily activity times (Daily)"
                                     type="number"
                                     fullWidth
                                     min={0}
                                     required
+                                    value={activityTime}
                                     InputProps={{inputProps: {min: 0}}}
                                     onChange={(event) => setActivityTime(event.target.value)}
                                 />
@@ -378,6 +379,7 @@ export default function UserPage() {
                                     fullWidth
                                     min={0}
                                     required
+                                    value={drugQuantity}
                                     InputProps={{inputProps: {min: 0}}}
                                     onChange={(event) => setDrugQuantity(event.target.value)}
                                 />
@@ -393,6 +395,7 @@ export default function UserPage() {
                                     fullWidth
                                     min={0}
                                     required
+                                    value={drugTime}
                                     InputProps={{inputProps: {min: 0}}}
                                     onChange={(event) => setDrugTime(event.target.value)}
                                 />
