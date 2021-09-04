@@ -21,7 +21,8 @@ function ChartView({data, label, series, axes}) {
             <div style={{
                 width: '400px',
                 height: '350px',
-                alignItems: 'center'
+                alignItems: 'center',
+                marginBottom: 50
             }}>
                 <div
                     style={{

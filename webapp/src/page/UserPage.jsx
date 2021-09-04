@@ -15,6 +15,7 @@ import {
     TextField
 } from "@material-ui/core"
 import BarChartView from "../component/BarChartView"
+import {isSameDay} from "../utility/dateConvertor"
 
 export default function UserPage() {
     const [rows, setRows] = useState([])
@@ -133,9 +134,33 @@ export default function UserPage() {
         setBloodOxygenData(bloodOxygen)
     }
 
+    function convertPlanDataToChartData(planData) {
+        let chartData = []
+        console.log("------")
+        console.log(planData)
+        planData.forEach(plan => {
+            console.log(plan.startTime)
+            if (chartData.some(chart => isSameDay(new Date(chart.time), new Date(plan.startTime)))) {
+                chartData = chartData.map(chart => {
+                    if (isSameDay(new Date(chart.time), new Date(plan.startTime))) chart.quantity += plan.quantity
+                    return chart
+                })
+
+            } else {
+                chartData.push({
+                    quantity: plan.quantity,
+                    time: plan.startTime
+                })
+            }
+        })
+        console.log('chartData', chartData)
+        return chartData
+    }
+
     function handleActivity() {
+        let chartData = convertPlanDataToChartData(user.activity)
         const activity = {
-            data: user.activity.map((data, index) => {
+            data: chartData.map((data, index) => {
                 return {
                     x: index,
                     y: data.quantity,
@@ -155,8 +180,9 @@ export default function UserPage() {
     }
 
     function handleDrug() {
+        let chartData = convertPlanDataToChartData(user.drug)
         const drug = {
-            data: user.drug.map((data, index) => {
+            data: chartData.map((data, index) => {
                 return {
                     x: index,
                     y: data.quantity,
