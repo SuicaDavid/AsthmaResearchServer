@@ -277,7 +277,7 @@ export default function UserPage() {
     return (
         <>
             <TableView rows={rows} columns={columns} onRowClick={handleClick}/>
-            <Fab color="primary" style={{position: 'absolute', right: 50, bottom: 50}}
+            <Fab color="primary" style={{position: 'absolute', right: 50, bottom: 50, zIndex: 99}}
                  onClick={handleAllHealthPlanOpen}>
                 <AddIcon/>
             </Fab>
