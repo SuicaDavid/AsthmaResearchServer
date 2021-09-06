@@ -62,5 +62,5 @@ app.use('/api/aqi', airQualityRouter)
 app.use('/api/health', healthRouter)
 
 app.listen(port, () => {
-	console.log('Server start')
+	console.log('Server start, listening: ' + port)
 })
