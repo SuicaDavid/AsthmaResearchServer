@@ -20,15 +20,19 @@ const nacl = require('tweetnacl')
 nacl.util = require('tweetnacl-util')
 
 const SEED = process.env.SEED
-let { private, public } = curve.generateKeyPair(
-	Uint8Array.from(Buffer.from(SEED, 'base64'))
-)
-let privateKeyString = ed2curve.convertSecretKey(private)
-let publicKeyString = ed2curve.convertPublicKey(public)
-let nonce = nacl.randomBytes(nacl.box.nonceLength)
+// let { private, public } = curve.generateKeyPair(
+// 	Uint8Array.from(Buffer.from(SEED, 'base64'))
+// )
+// let privateKeyString = ed2curve.convertSecretKey(private)
+// let publicKeyString = ed2curve.convertPublicKey(public)
+// let nonce = nacl.randomBytes(nacl.box.nonceLength)
 
-console.log(Buffer.from(private).toString('base64'))
-console.log(Buffer.from(public).toString('base64'))
+// console.log(Buffer.from(private).toString('base64'))
+// console.log(Buffer.from(public).toString('base64'))
+
+
+
+
 
 // Participant.remove({}, (err) => {
 // 	console.log('collection removed')
