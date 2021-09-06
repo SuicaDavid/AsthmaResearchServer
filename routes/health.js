@@ -3,7 +3,6 @@ const axios = require('axios')
 const { setUTCTime } = require('../utility/dateUtility')
 const router = express.Router()
 const https = require('https')
-const { url } = require('inspector')
 const mongoose = require('mongoose')
 const {
 	Participant,
