@@ -2,6 +2,7 @@ const path = require('path')
 if (process.env.NODE_ENV != 'product') {
 	require('dotenv').config({ path: path.join(__dirname, '.env') })
 }
+const port = process.env.port || 3001
 const express = require('express')
 const mongoose = require('mongoose')
 const axios = require('axios')
@@ -58,6 +59,6 @@ app.use('/api/weather', weatherRouter)
 app.use('/api/aqi', airQualityRouter)
 app.use('/api/health', healthRouter)
 
-app.listen(3000, () => {
+app.listen(port, () => {
 	console.log('Server start')
 })
