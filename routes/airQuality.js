@@ -4,7 +4,6 @@ const { setUTCTime } = require('../utility/dateUtility')
 const router = express.Router()
 const cityListJson = require('../city.list.json')
 const https = require('https')
-const { url } = require('inspector')
 const {
 	MS_PER_MINUTE,
 	REQUEST_INTERVAL,
