@@ -1,6 +1,6 @@
 const path = require('path')
 // if (process.env.NODE_ENV != 'product') {
-	require('dotenv').config({ path: path.join(__dirname, '.env') })
+require('dotenv').config({ path: path.join(__dirname, '.env') })
 // }
 const port = process.env.port || 3001
 const express = require('express')
@@ -22,6 +22,8 @@ const app = express()
 
 mongoose.connect(process.env.DATABASE_URL, {
 	useNewUrlParser: true,
+	useCreateIndex: true,
+  	useFindAndModify: false,
 	useUnifiedTopology: true,
 })
 const db = mongoose.connection
