@@ -1,7 +1,7 @@
 const path = require('path')
-if (process.env.NODE_ENV != 'product') {
+// if (process.env.NODE_ENV != 'product') {
 	require('dotenv').config({ path: path.join(__dirname, '.env') })
-}
+// }
 const port = process.env.port || 3001
 const express = require('express')
 const mongoose = require('mongoose')
