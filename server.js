@@ -2,7 +2,7 @@ const path = require('path')
 // if (process.env.NODE_ENV != 'product') {
 require('dotenv').config({ path: path.join(__dirname, '.env') })
 // }
-const port = process.env.port || 3001
+const port = process.env.port || 3000
 const express = require('express')
 const mongoose = require('mongoose')
 const axios = require('axios')
@@ -38,7 +38,7 @@ app.use(express.static('public'))
 
 app.use(function (req, res, next) {
 	// Website you wish to allow to connect
-	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001')
+	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
 
 	// Request methods you wish to allow
 	res.setHeader(
@@ -56,10 +56,14 @@ app.use(function (req, res, next) {
 	// Pass to next layer of middleware
 	next()
 })
-
+app.use(express.static(path.join(__dirname, "webapp/build/")))
 app.use('/api/weather', weatherRouter)
 app.use('/api/aqi', airQualityRouter)
 app.use('/api/health', healthRouter)
+
+app.get('/', (req, res) => {
+	res.sendFile(path.join(__dirname, "webapp/build/", "index.html"))
+  })
 
 app.listen(port, () => {
 	console.log('Server start, listening: ' + port)
