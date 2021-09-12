@@ -59,14 +59,3 @@ test('DELETE /api/weather no content', async () => {
 			expect(response.text).toBe('Nothing to delete')
 		})
 })
-
-test('GET /api/weather with cood', async () => {
-	await supertest(app)
-		.get('/api/aqi/?lat=51.5007&lon=0.1246')
-		.expect(200)
-		.then((response) => {
-			expect(response.body.name).toBe(undefined)
-			expect(response.body.list[0]).not.toBe(undefined)
-			expect(response.body.list[0]).not.toBe(null)
-		})
-})

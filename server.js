@@ -23,7 +23,7 @@ const app = express()
 mongoose.connect(process.env.DATABASE_URL, {
 	useNewUrlParser: true,
 	useCreateIndex: true,
-  	useFindAndModify: false,
+	useFindAndModify: false,
 	useUnifiedTopology: true,
 })
 const db = mongoose.connection
@@ -56,17 +56,19 @@ app.use(function (req, res, next) {
 	// Pass to next layer of middleware
 	next()
 })
-app.use(express.static(path.join(__dirname, "webapp/build/")))
+app.use(express.static(path.join(__dirname, 'webapp/build/')))
 app.use('/api/weather', weatherRouter)
 app.use('/api/aqi', airQualityRouter)
 app.use('/api/health', healthRouter)
 
 app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, "webapp/build/", "index.html"))
-  })
-
-app.listen(port, () => {
-	console.log('Server start, listening: ' + port)
+	res.sendFile(path.join(__dirname, 'webapp/build/', 'index.html'))
 })
+
+if (process.env.NODE_ENV !== 'test') {
+	app.listen(port, () => {
+		console.log('Server start, listening: ' + port)
+	})
+}
 
 module.exports = app
