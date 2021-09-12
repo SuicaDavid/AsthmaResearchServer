@@ -11,7 +11,7 @@ const WEATHER_API_KEY =  process.env.WEATHER_API_KEY
 
 const instance = axios.create({
     httpsAgent: new https.Agent({keepAlive: true}),
-    timeout: 500
+    timeout: 1000
 })
 
 router.get('/', async (req, res)=>{

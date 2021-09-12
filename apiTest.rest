@@ -3,8 +3,8 @@ GET http://localhost:3000/api/weather/?lat=51.5007&lon=0.1246&cityName=Abbey+Woo
 
 
 ### Delete weather cache
-# DELETE http://localhost:3000/api/weather/?id=7302135
-DELETE http://localhost:3000/api/weather/?id=3333229
+DELETE http://localhost:3000/api/weather/?id=7302135
+# DELETE http://localhost:3000/api/weather/?id=3333229
 
 ### 
 GET http://localhost:3000/api/aqi/?lat=51.5007&lon=0.1246

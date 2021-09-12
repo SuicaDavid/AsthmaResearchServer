@@ -224,48 +224,48 @@ router.get('/plan', async (req, res) => {
 	}
 })
 
-router.post('/key', async (req, res) => {
-	for (key in req.body) {
-		let data = JSON.parse(key + req.body[key])
-		let userKey = new UserKey({
-			userId: data.userId,
-			publicKey: data.key,
-		})
-		await userKey.save()
-		res.json({
-			serverKey: Buffer.from(public).toString('base64'),
-			nonce: Buffer.from(nonce).toString('hex'),
-		})
-		break
-	}
-})
+// router.post('/key', async (req, res) => {
+// 	for (key in req.body) {
+// 		let data = JSON.parse(key + req.body[key])
+// 		let userKey = new UserKey({
+// 			userId: data.userId,
+// 			publicKey: data.key,
+// 		})
+// 		await userKey.save()
+// 		res.json({
+// 			serverKey: Buffer.from(public).toString('base64'),
+// 			nonce: Buffer.from(nonce).toString('hex'),
+// 		})
+// 		break
+// 	}
+// })
 
-router.post('/decode', async (req, res) => {
-	for (key in req.body) {
-		let data = JSON.parse(key + req.body[key])
-		console.log(data)
-		let secret = data.secret
-		UserKey.findOne({ userId: data.userId })
-			.then((user) => {
-				console.log('----')
-				let secretMsg = Uint8Array.from(Buffer.from(secret, 'base64'))
-				console.log(secret, secretMsg)
-				let decryptedMessage = nacl.box.open(
-					secretMsg,
-					nonce,
-					ed2curve.convertPublicKey(user.publicKey),
-					privateKeyString
-				)
-				console.log(decryptedMessage)
-				let message = new TextDecoder().decode(decryptedMessage)
-				console.log(message)
-				res.end('123')
-			})
-			.catch((error) => {
-				console.log(error)
-			})
-	}
-})
+// router.post('/decode', async (req, res) => {
+// 	for (key in req.body) {
+// 		let data = JSON.parse(key + req.body[key])
+// 		console.log(data)
+// 		let secret = data.secret
+// 		UserKey.findOne({ userId: data.userId })
+// 			.then((user) => {
+// 				console.log('----')
+// 				let secretMsg = Uint8Array.from(Buffer.from(secret, 'base64'))
+// 				console.log(secret, secretMsg)
+// 				let decryptedMessage = nacl.box.open(
+// 					secretMsg,
+// 					nonce,
+// 					ed2curve.convertPublicKey(user.publicKey),
+// 					privateKeyString
+// 				)
+// 				console.log(decryptedMessage)
+// 				let message = new TextDecoder().decode(decryptedMessage)
+// 				console.log(message)
+// 				res.end('123')
+// 			})
+// 			.catch((error) => {
+// 				console.log(error)
+// 			})
+// 	}
+// })
 
 function saveUserId(userId) {
 	let user = new Participant({
