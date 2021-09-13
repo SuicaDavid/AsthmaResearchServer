@@ -34,23 +34,6 @@ test('DELETE /api/weather', async () => {
 		})
 })
 
-test('DELETE /api/weather cache', async () => {
-	let id = 0
-	await supertest(app)
-		.get('/api/weather?lat=51.5007&lon=0.1246&cityName=Abbey+Wood')
-		.expect(200)
-		.then((response) => {
-			expect(response.body.id).not.toBe(undefined)
-			id = response.body.id
-		})
-	await supertest(app)
-		.delete(`/api/weather?id=${id}`)
-		.expect(200)
-		.then((response) => {
-			expect(response.text).toBe('Finish')
-		})
-})
-
 test('DELETE /api/weather no content', async () => {
 	await supertest(app)
 		.delete('/api/weather?id=3333229')

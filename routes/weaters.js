@@ -49,6 +49,7 @@ router.delete('/', async (req, res)=> {
     let {id} = req.query
     try {
         let savedWeather = await weather.findOne({id: id}).exec()
+        console.log(savedWeather)
         if (savedWeather) {
             savedWeather.delete()
             res.end("Finish")

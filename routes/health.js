@@ -196,7 +196,6 @@ router.post('/plan/all', async (req, res) => {
 
 router.post('/plan', async (req, res) => {
 	const { userId, activity, drug } = req.body
-	console.log(userId, activity)
 	let user = await getUserByID(userId)
 	if (user) {
 		if (activity) user.activityType = activity
@@ -211,9 +210,7 @@ router.post('/plan', async (req, res) => {
 router.get('/plan', async (req, res) => {
 	const { userId } = req.query
 	let user = await getUserByID(userId)
-	console.log(req.query)
 	if (user) {
-		console.log(user.activityType)
 		let plans = {
 			activity: user.activityType,
 			drug: user.drugType,
